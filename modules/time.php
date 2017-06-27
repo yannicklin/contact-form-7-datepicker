@@ -6,7 +6,7 @@ class ContactForm7Datepicker_Time {
 
 	public static function register() {
 		// Register shortcodes
-        add_action('wpcf7_init', array(__CLASS__, 'add_shortcodes'));
+        add_action('wpcf7_init', array(__CLASS__, 'add_formtags'));
 
 		// Validations
 		add_filter('wpcf7_validate_time', array(__CLASS__, 'validation_filter'), 10, 2);
@@ -23,8 +23,8 @@ class ContactForm7Datepicker_Time {
 		add_action('wp_print_footer_scripts', array(__CLASS__, 'print_inline_js'), 99999);
 	}
 
-	public static function shortcode_handler($tag) {
-		$tag = new WPCF7_Shortcode($tag);
+	public static function formtag_handler($tag) {
+		$tag = new WPCF7_FormTag($tag);
 
 		if (empty($tag->name))
 			return '';
@@ -142,20 +142,22 @@ class ContactForm7Datepicker_Time {
 		require_once dirname(__FILE__) . '/generators/time.php';
 	}
 
-	public static function add_shortcodes() {
+	public static function add_formtags() {
 		if (function_exists('wpcf7_add_form_tag')) {
-			wpcf7_add_form_tag(array('time', 'time*'), array(__CLASS__, 'shortcode_handler'), true);
+			wpcf7_add_form_tag(array('time', 'time*'), array(__CLASS__, 'formtag_handler'), true);
 		}
 	}
 
-	public static function messages($messages) {
-		$messages['invalid_time'] = array(
-			'description' => __('The time that the sender entered is invalid'),
-			'default' => __('Invalid time supplied.'),
-		);
+    public static function messages($messages) {
+        global $CF7DObejct;
 
-		return $messages;
-	}
+        $messages['invalid_date'] = array(
+            'description' => __('The date that the sender entered is invalid', $CF7DObejct->get_plugin_name()),
+            'default' => __('Invalid date supplied.', $CF7DObejct->get_plugin_name()),
+        );
+
+        return $messages;
+    }
 
 	public static function print_inline_js() {
 		if (! wp_script_is('jquery-ui-timepicker', 'done') || empty(self::$inline_js))

@@ -12,7 +12,7 @@ class ContactForm7Datepicker_Date {
 		remove_action('wpcf7_admin_init', 'wpcf7_add_tag_generator_date', 19);
 
 		// Register shortcodes
-        add_action('wpcf7_init', array(__CLASS__, 'add_shortcodes'));
+        add_action('wpcf7_init', array(__CLASS__, 'add_formtags'));
 
 		// Validations
 		add_filter('wpcf7_validate_date', array(__CLASS__, 'validation_filter'), 10, 2);
@@ -28,8 +28,8 @@ class ContactForm7Datepicker_Date {
 		add_action('wp_print_footer_scripts', array(__CLASS__, 'print_inline_js'), 99999);
 	}
 
-	public static function shortcode_handler($tag) {
-		$tag = new WPCF7_Shortcode($tag);
+	public static function formtag_handler($tag) {
+		$tag = new WPCF7_FormTag($tag);
 
 		if (empty($tag->name))
 			return '';
@@ -142,20 +142,22 @@ class ContactForm7Datepicker_Date {
         require_once dirname(__FILE__) . '/generators/date.php';
 	}
 
-	public static function add_shortcodes() {
+	public static function add_formtags() {
 		if (function_exists('wpcf7_add_form_tag')) {
             // Remove Contact Form 7's date module
-            wpcf7_remove_shortcode('date');
-            wpcf7_remove_shortcode('date*');
+            wpcf7_remove_form_tag('date');
+            wpcf7_remove_form_tag('date*');
 
-			wpcf7_add_form_tag(array('date', 'date*'), array(__CLASS__, 'shortcode_handler'), true);
+			wpcf7_add_form_tag(array('date', 'date*'), array(__CLASS__, 'formtag_handler'), true);
 		}
 	}
 
 	public static function messages($messages) {
+	    global $CF7DObejct;
+
 		$messages['invalid_date'] = array(
-			'description' => __('The date that the sender entered is invalid'),
-			'default' => __('Invalid date supplied.'),
+			'description' => __('The date that the sender entered is invalid', $CF7DObejct->get_plugin_name()),
+			'default' => __('Invalid date supplied.', $CF7DObejct->get_plugin_name()),
 		);
 
 		return $messages;

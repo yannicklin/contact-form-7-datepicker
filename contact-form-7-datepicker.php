@@ -4,8 +4,10 @@ Plugin Name: Contact Form 7 Datepicker
 Plugin URI: https://github.com/relu/contact-form-7-datepicker/
 Description: Easily add a date field using jQuery UI's datepicker to your CF7 forms. This plugin depends on Contact Form 7.
 Author: Aurel Canciu
-Version: 2.6.0
+Version: 2.6.1
 Author URI: https://github.com/relu/
+Text Domain: contact-form-7-datepicker
+Domain Path: /languages
 */
 
 /**
@@ -26,15 +28,27 @@ Author URI: https://github.com/relu/
 ?>
 <?php
 
+
 class ContactForm7Datepicker {
 
+    const PLUGIN_NAME = 'contact-form-7-datepicker';
 	const JQUERYUI_VERSION = '1.11.4';
+
+    public static function instance() {
+        static $instance;
+
+        if ( ! $instance )
+            $instance = new self();
+
+        return $instance;
+    }
 
 	function __construct() {
 		add_action('plugins_loaded', array($this, 'load_modules'), 50);
 
 		add_action('wpcf7_enqueue_scripts', array(__CLASS__, 'enqueue_js'));
 		add_action('wpcf7_enqueue_styles', array(__CLASS__, 'enqueue_css'));
+        add_action( 'plugins_loaded', array(__CLASS__, $this->get_plugin_name()), 50);
 
 		register_activation_hook(__FILE__, array($this, 'activate'));
 
@@ -151,6 +165,24 @@ class ContactForm7Datepicker {
 
         return $uri;
     }
+
+    public function load_plugin_textdomain() {
+
+        load_plugin_textdomain(
+            self::PLUGIN_NAME,
+            false,
+            dirname(__FILE__) . '/languages/'
+        );
+    }
+
+    public function get_plugin_name() {
+        return self::PLUGIN_NAME;
+    }
+
+    public function get_jqueryui_ver() {
+        return self::JQUERYUI_VERSION;
+    }
 }
 
-new ContactForm7Datepicker;
+$CF7DObejct = new ContactForm7Datepicker;
+$CF7DObejct::instance();

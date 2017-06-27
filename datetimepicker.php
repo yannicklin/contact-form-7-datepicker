@@ -147,6 +147,7 @@ class CF7_DateTimePicker {
 		if ('' !== $this->showAnim) {
 			add_action('wp_enqueue_scripts', array($this, 'enqueue_effect'));
 		}
+
 	}
 
 	public function __set($option, $value) {

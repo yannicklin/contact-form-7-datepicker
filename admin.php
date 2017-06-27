@@ -36,16 +36,17 @@ class ContactForm7Datepicker_Admin {
 	}
 
 	public static function theme_panel() {
+        global $CF7DObejct;
 		?>
-        <h3><?php _e('Datepicker Theme'); ?></h3>
+        <h3><?php _e('Datepicker Theme', $CF7DObejct->get_plugin_name()); ?></h3>
 
         <div id="preview" style="float: left; margin: 0 10px 0 0">
             <?php echo "<style id=\"cf7dp-jquery-ui-theme\" scoped>@import url('" . ContactForm7Datepicker::get_theme_uri() .  "')</style>"; ?>
         </div>
 			<form action="">
-				<label for="jquery-ui-theme"><?php _e('Theme'); ?></label><br />
+				<label for="jquery-ui-theme"><?php _e('Theme', $CF7DObejct->get_plugin_name()); ?></label><br />
 				<?php self::themes_dropdown(); ?>
-				<input type="submit" id="save-ui-theme" value="<?php _e('Save'); ?>" class="button" />
+				<input type="submit" id="save-ui-theme" value="<?php _e('Save', $CF7DObejct->get_plugin_name()); ?>" class="button" />
 			</form>
 		<div class="clear"></div>
 
@@ -113,8 +114,10 @@ class ContactForm7Datepicker_Admin {
 	}
 
 	function ajax_save_settings() {
-		$successmsg = '<div id="message" class="updated fade"><p><strong>' . __('Options saved.') . '</strong></p></div>';
-		$errormsg = '<div id="message" class="error fade"><p><strong>' . __('Options could not be saved.') . '</strong></p></div>';
+	    global $CF7DObejct;
+
+		$successmsg = '<div id="message" class="updated fade"><p><strong>' . __('Options saved.', $CF7DObejct->get_plugin_name()) . '</strong></p></div>';
+		$errormsg = '<div id="message" class="error fade"><p><strong>' . __('Options could not be saved.', $CF7DObejct->get_plugin_name()) . '</strong></p></div>';
 
 		if (! isset($_POST['ui_theme']))
 			die($errormsg);
@@ -135,8 +138,10 @@ class ContactForm7Datepicker_Admin {
 	}
 
 	private static function themes_dropdown() {
+        global $CF7DObejct;
+
 		$themes = array(
-			'disabled' => __('Disabled'),
+			'disabled' => __('Disabled', $CF7DObejct->get_plugin_name()),
 			'smoothness' => 'Smoothness',
 			'black-tie' => 'Black Tie',
 			'blitzer' => 'Blitzer',
